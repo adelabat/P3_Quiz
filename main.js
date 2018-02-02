@@ -2,18 +2,67 @@ const readline = require('readline');
 const figlet = require('figlet');
 const chalk = require('chalk');
 
+
+
+/**
+ * Dar color a un string.
+ *
+ * @param msg    Es string al que hay que dar color.
+ * @param color  El color con el que pintar msg.
+ * @returns {string} Devuelve el string msg con el color indicado.
+ */
+const colorize = (msg, color) => {
+
+    if (typeof color !== "undefined") {
+        msg = chalk[color].bold(msg);
+    }
+    return msg;
+};
+
+
+/**
+ * Escribe un mensaje de log.
+ *
+ * @param msg  El String a escribir
+ * @param color  Color del texto.
+ */
+const log = (msg, color) => {
+
+    console.log(colorize(msg, color));
+};
+
+
+/**
+ * Escribe un mensaje de log grande.
+ *
+ * @param msg    Texto a escribir.
+ * @param color  Color del texto.
+ */
+const biglog = (msg, color) => {
+
+   log(figlet.textSync(msg, { horizontalLayout: 'full' }), color);
+};
+
+
+/**
+ * Escribe el mensaje de error emsg.
+ *
+ * @param emsg Texto del mensaje de error.
+ */
+const errorlog = (emsg) => {
+
+    console.log(`${colorize("Error", "red")}: ${colorize(colorize(emsg, "red"), "bgYellowBright")}`);
+};
+
+
 // Mensaje inicial
-console.log(
-    chalk.green.bold(
-        figlet.textSync('CORE Quiz', {horizontalLayout: 'full'})
-    )
-);
+biglog('CORE Quiz', 'green');
 
 
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
-    prompt: 'quiz> ',
+    prompt: colorize("quiz > ", 'blue'),
     completer: (line) => {
         const completions = 'h help add delete edit list test p play credits q quit'.split(' ');
         const hits = completions.filter((c) => c.startsWith(line));
@@ -79,14 +128,14 @@ rl
             break;
 
         default:
-            console.log(`Comando desconocido: '${cmd}'`);
-            console.log(`Use 'help' para ver todos los comandos disponibles.`);
+            log(`Comando desconocido: '${colorize(cmd, 'red')}'`);
+            log(`Use ${colorize('help', 'green')} para ver todos los comandos disponibles.`);
             rl.prompt();
             break;
     }
 })
 .on('close', () => {
-    console.log('Adios!');
+    log('Adios!');
     process.exit(0);
 });
 
@@ -97,17 +146,17 @@ rl
  * Muestra la ayuda.
  */
 const helpCmd = () => {
-    console.log("Commandos:");
-    console.log("  h|help - Muestra esta ayuda.");
-    console.log("  list - Listar los quizzes existentes.");
-    console.log("  show <id> - Muestra la pregunta y la respuesta el quiz indicado.");
-    console.log("  add - Añadir un nuevo quiz interactivamente.");
-    console.log("  delete <id> - Borrar el quiz indicado.");
-    console.log("  edit <id> - Editar el quiz indicado.");
-    console.log("  test <id> - Probar el quiz indicado.");
-    console.log("  p|play - Jugar a preguntar aleatoriamente todos los quizzes.");
-    console.log("  credits - Créditos.");
-    console.log("  q|quit - Salir del programa.");
+    log("Commandos:");
+    log("  h|help - Muestra esta ayuda.");
+    log("  list - Listar los quizzes existentes.");
+    log("  show <id> - Muestra la pregunta y la respuesta el quiz indicado.");
+    log("  add - Añadir un nuevo quiz interactivamente.");
+    log("  delete <id> - Borrar el quiz indicado.");
+    log("  edit <id> - Editar el quiz indicado.");
+    log("  test <id> - Probar el quiz indicado.");
+    log("  p|play - Jugar a preguntar aleatoriamente todos los quizzes.");
+    log("  credits - Créditos.");
+    log("  q|quit - Salir del programa.");
     rl.prompt();
 };
 
@@ -116,7 +165,7 @@ const helpCmd = () => {
  * Lista todos los quizzes existentes en el modelo.
  */
 const listCmd = () => {
-    console.log('Listar todos los quizzes existentes.');
+    log('Listar todos los quizzes existentes.', 'red');
     rl.prompt();
 };
 
@@ -127,7 +176,7 @@ const listCmd = () => {
  * @param id Clave del quiz a mostrar.
  */
 const showCmd = id => {
-    console.log('Mostrar el quiz indicado.');
+    log('Mostrar el quiz indicado.', 'red');
     rl.prompt();
 };
 
@@ -137,7 +186,7 @@ const showCmd = id => {
  * Pregunta interactivamente por la pregunta y por la respuesta.
  */
 const addCmd = () => {
-    console.log('Añadir un nuevo quiz.');
+    log('Añadir un nuevo quiz.', 'red');
     rl.prompt();
 };
 
@@ -149,7 +198,7 @@ const addCmd = () => {
  * @param id Clave del quiz a borrar en el modelo.
  */
 const deleteCmd = id => {
-    console.log('Borrar el quiz indicado.');
+    log('Borrar el quiz indicado.', 'red');
     rl.prompt();
 };
 
@@ -160,7 +209,7 @@ const deleteCmd = id => {
  * @param id Clave del quiz a editar en el modelo.
  */
 const editCmd = id => {
-    console.log('Editar el quiz indicado.');
+    log('Editar el quiz indicado.', 'red');
     rl.prompt();
 };
 
@@ -171,7 +220,7 @@ const editCmd = id => {
  * @param id Clave del quiz a probar.
  */
 const testCmd = id => {
-    console.log('Probar el quiz indicado.');
+    log('Probar el quiz indicado.', 'red');
     rl.prompt();
 };
 
@@ -181,7 +230,7 @@ const testCmd = id => {
  * Se gana si se contesta a todos satisfactoriamente.
  */
 const playCmd = () => {
-    console.log('Jugar.');
+    log('Jugar.', 'red');
     rl.prompt();
 };
 
@@ -190,9 +239,9 @@ const playCmd = () => {
  * Muestra los nombres de los autores de la práctica.
  */
 const creditsCmd = () => {
-    console.log('Autores de la práctica:');
-    console.log('Nombre 1');
-    console.log('Nombre 2');
+    log('Autores de la práctica:');
+    log('Nombre 1', 'green');
+    log('Nombre 2', 'green');
     rl.prompt();
 };
 
