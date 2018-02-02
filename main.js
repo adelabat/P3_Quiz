@@ -14,8 +14,13 @@ rl.prompt();
 
 rl
 .on('line', (line) => {
-    switch (line.trim()) {
+
+    let args = line.split(" ");
+    let cmd = args[0].toLowerCase().trim();
+
+    switch (cmd) {
         case '':
+            rl.prompt();
             break;
 
         case 'help':
@@ -37,11 +42,11 @@ rl
             break;
 
         case 'show':
-            showCmd();
+            showCmd(args[1]);
             break;
 
         case 'test':
-            testCmd();
+            testCmd(args[1]);
             break;
 
         case 'play':
@@ -50,11 +55,11 @@ rl
             break;
 
         case 'delete':
-            deleteCmd();
+            deleteCmd(args[1]);
             break;
 
         case 'edit':
-            editCmd();
+            editCmd(args[1]);
             break;
 
         case 'credits':
@@ -62,11 +67,11 @@ rl
             break;
 
         default:
-            console.log(`Comando desconocido: '${line.trim()}'`);
+            console.log(`Comando desconocido: '${cmd}'`);
             console.log(`Use 'help' para ver todos los comandos disponibles.`);
+            rl.prompt();
             break;
     }
-    rl.prompt();
 })
 .on('close', () => {
     console.log('Adios!');
@@ -91,6 +96,7 @@ const helpCmd = () => {
     console.log("  p|play - Jugar a preguntar aleatoriamente todos los quizzes.");
     console.log("  credits - Créditos.");
     console.log("  q|quit - Salir del programa.");
+    rl.prompt();
 };
 
 
@@ -99,6 +105,7 @@ const helpCmd = () => {
  */
 const listCmd = () => {
     console.log('Listar todos los quizzes existentes.');
+    rl.prompt();
 };
 
 
@@ -109,6 +116,7 @@ const listCmd = () => {
  */
 const showCmd = id => {
     console.log('Mostrar el quiz indicado.');
+    rl.prompt();
 };
 
 
@@ -118,6 +126,7 @@ const showCmd = id => {
  */
 const addCmd = () => {
     console.log('Añadir un nuevo quiz.');
+    rl.prompt();
 };
 
 
@@ -129,6 +138,7 @@ const addCmd = () => {
  */
 const deleteCmd = id => {
     console.log('Borrar el quiz indicado.');
+    rl.prompt();
 };
 
 
@@ -139,6 +149,7 @@ const deleteCmd = id => {
  */
 const editCmd = id => {
     console.log('Editar el quiz indicado.');
+    rl.prompt();
 };
 
 
@@ -149,6 +160,7 @@ const editCmd = id => {
  */
 const testCmd = id => {
     console.log('Probar el quiz indicado.');
+    rl.prompt();
 };
 
 
@@ -158,6 +170,7 @@ const testCmd = id => {
  */
 const playCmd = () => {
     console.log('Jugar.');
+    rl.prompt();
 };
 
 
@@ -168,6 +181,7 @@ const creditsCmd = () => {
     console.log('Autores de la práctica:');
     console.log('Nombre 1');
     console.log('Nombre 2');
+    rl.prompt();
 };
 
 
