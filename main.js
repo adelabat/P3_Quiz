@@ -1,8 +1,14 @@
 const readline = require('readline');
-
+const figlet = require('figlet');
+const chalk = require('chalk');
 
 // Mensaje inicial
-console.log('CORE Quiz');
+console.log(
+    chalk.green.bold(
+        figlet.textSync('CORE Quiz', {horizontalLayout: 'full'})
+    )
+);
+
 
 const rl = readline.createInterface({
     input: process.stdin,
