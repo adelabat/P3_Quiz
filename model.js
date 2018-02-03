@@ -1,10 +1,20 @@
 
+const fs = require("fs");
+
+// Nombre del fichero donde se guardan las preguntas.
+// Es un fichero de texto con el JSON de quizzes.
+const DB_FILENAME = "quizzes.json";
+
 
 // Modelo de datos.
 //
 // En esta variable se mantienen todos los quizzes existentes.
 // Es un array de objetos, donde cada objeto tiene los atributos question
 // y answer para guardar el texto de la pregunta y el de la respuesta.
+//
+// Al arrancar la aplicación, esta variable contiene estas cuatro preguntas,
+// pero al final del módulo se llama a load() para la cargar las preguntas
+// guardadas en el fichero DB_FILENAME.
 let quizzes = [
     {
         question: "Capital de Italia",
@@ -23,6 +33,56 @@ let quizzes = [
         answer: "Lisboa"
     }
 ];
+
+
+/**
+ *  Carga las preguntas guardadas en el fichero.
+ *
+ *  Este método carga el contenido del fichero DB_FILENAME en la variable
+ *  quizzes. El contenido de ese fichero está en formato JSON.
+ *  La primera vez que se ejecute este método, el fichero DB_FILENAME no
+ *  existe, y se producirá el errro ENOENT. En este caso se salva el
+ *  contenido inicial almacenado en quizzes.
+ *  Si se produce otro tipo de error, se lanza una excepción que abortará
+ *  la ejecución del programa.
+ */
+const load = () => {
+
+    fs.readFile(DB_FILENAME, (err, data) => {
+        if (err) {
+
+            // La primera vez no existe el fichero
+            if (err.code === "ENOENT") {
+                save();  // valores iniciales
+                return;
+            }
+            throw err;
+        }
+
+        let json = JSON.parse(data);
+
+        if (json) {
+            quizzes = json;
+        }
+    });
+};
+
+
+/**
+ *  Guarda las preguntas en el fichero.
+ *
+ *  Guarda en formatro JSON el valor de quizzes en el fichero DB_FILENAME.
+ *  Si se produce algún tipo de error, se lanza una excepción que abortará
+ *  la ejecución del programa.
+ */
+const save = () => {
+
+    fs.writeFile(DB_FILENAME,
+        JSON.stringify(quizzes),
+        err => {
+            if (err) throw err;
+        });
+};
 
 
 //
@@ -46,6 +106,7 @@ exports.add = (question, answer) => {
         question: (question || "").trim(),
         answer: (answer || "").trim()
     });
+    save();
 };
 
 
@@ -67,6 +128,7 @@ exports.update = (id, question, answer) => {
         question: (question || "").trim(),
         answer: (answer || "").trim()
     });
+    save();
 };
 
 /**
@@ -112,8 +174,11 @@ exports.deleteByIndex = id => {
         throw new Error(`El valor del parámetro id no es válido.`);
     }
     quizzes.splice(id, 1);
+    save();
 };
 
 
+// Carga los quizzes almacenados en el fichero.
+load();
 
 
