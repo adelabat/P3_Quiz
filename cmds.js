@@ -85,7 +85,6 @@ exports.addCmd = rl => {
 };
 
 
-
 /**
  * Borra un quiz del modelo.
  *
@@ -93,7 +92,15 @@ exports.addCmd = rl => {
  * @param id Clave del quiz a borrar en el modelo.
  */
 exports.deleteCmd = (rl, id) => {
-    log('Borrar el quiz indicado.', 'red');
+    if (typeof id === "undefined") {
+        errorlog(`Falta el parámetro id.`);
+    } else {
+        try {
+            model.deleteByIndex(id);
+        } catch(error) {
+            errorlog(error.message);
+        }
+    }
     rl.prompt();
 };
 
