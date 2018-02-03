@@ -46,7 +46,16 @@ exports.listCmd = rl => {
  * @param id Clave del quiz a mostrar.
  */
 exports.showCmd = (rl, id) => {
-    log('Mostrar el quiz indicado.', 'red');
+    if (typeof id === "undefined") {
+        errorlog(`Falta el parámetro id.`);
+    } else {
+        try {
+            const quiz = model.getByIndex(id);
+            log(` [${colorize(id, 'magenta')}]:  ${quiz.question} ${colorize('=>', 'magenta')} ${quiz.answer}`);
+        } catch(error) {
+            errorlog(error.message);
+        }
+    }
     rl.prompt();
 };
 
