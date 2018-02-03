@@ -108,12 +108,32 @@ exports.deleteCmd = (rl, id) => {
 /**
  * Edita un quiz del modelo.
  *
+ * Hay que recordar que el funcionamiento de la funcion rl.question es asíncrono.
+ * El prompt hay que sacarlo cuando ya se ha terminado la interacción con el usuario,
+ * es decir, la llamada a rl.prompt() se debe hacer en la callback de la segunda
+ * llamada a rl.question.
+ *
  * @param rl Objeto readline usado para implementar el CLI.
  * @param id Clave del quiz a editar en el modelo.
  */
 exports.editCmd = (rl, id) => {
-    log('Editar el quiz indicado.', 'red');
-    rl.prompt();
+    if (typeof id === "undefined") {
+        errorlog(`Falta el parámetro id.`);
+        rl.prompt();
+    } else {
+        try {
+            rl.question(colorize(' Introduzca una pregunta: ', 'red'), question => {
+                rl.question(colorize(' Introduzca la respuesta ', 'red'), answer => {
+                    model.update(id, question, answer);
+                    log(` Se ha cambiado el quiz ${colorize(id, 'magenta')} por: ${question} ${colorize('=>', 'magenta')} ${answer}`);
+                    rl.prompt();
+                });
+            });
+        } catch (error) {
+            errorlog(error.message);
+            rl.prompt();
+        }
+    }
 };
 
 
